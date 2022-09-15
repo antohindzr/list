@@ -1,10 +1,17 @@
 {
     "private": true,
+    "dependencies": {
+        "@vitejs/plugin-vue": "^3.1.0"
+    },
     "scripts": {
         "dev": "vite",
         "build": "vite build"
     },
-    "dependencies": {
-        "vite": "^3.1.0"
+    "devDependencies": {
+        "autoprefixer": "^10.4.10",
+        "postcss": "^8.4.16",
+        "tailwindcss": "^3.1.8",
+        "vite": "^3.1.0",
+        "vite-plugin-laravel": "^0.2.2"
     }
 }
