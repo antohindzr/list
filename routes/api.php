@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\API\listuserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,15 +20,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });*/
 
-Route::get('listuser', 'App\Http\Controllers\listuser\listuserController@list');
-//Route::get('listuser', 'App\Http\Controllers\listuser\listuserController@boot');
-//Route::get('listuser/{uniq}', 'App\Http\Controllers\listuser\listuserController@listRetrieve');
+Route::controller(RegisterController::class)->group(function(){
+    Route::post('register', 'register');
+    Route::post('login', 'login');
+});
 
-//Route::post('list', 'App\Http\Controllers\listuser\listuserController@listSave');
+Route::middleware('auth:sanctum')->group( function () {
+    Route::resource('listuser', listuserController::class);
+    Route::post('listuser', 'App\Http\Controllers\API\listuserController@listGenerate');
+    Route::delete('listuser/{id}', 'App\Http\Controllers\API\listuserController@destroy');
+});
+Route::get('listuser', 'App\Http\Controllers\API\listuserController@list');
 
-//Route::put('listuser/{list}', 'App\Http\Controllers\listuser\listuserController@listEdit');
-
-//Route::delete('listuser/{id}', 'App\Http\Controllers\listuser\listuserController@listDelete');
-
-Route::post('listuser', 'App\Http\Controllers\listuser\listuserController@listGenerate');
-//Route::post('listuser', 'App\Http\Controllers\listuser\listuserController@delall');

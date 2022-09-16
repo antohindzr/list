@@ -12,7 +12,6 @@ class listModel extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        //'id',
         'fio',
         'email',
         'number'
