@@ -30,6 +30,7 @@ public function listGenerate(Request $request)
     }
 
     $entry = listModel::create($input);
+    
     $fio = listModel::orderBy('id','desc')->value('fio');
     $idlast = listModel::orderBy('id','desc')->value('id');
     $idmatch = listModel::where('fio', '=', $fio)->value('id');
@@ -38,6 +39,11 @@ public function listGenerate(Request $request)
         listModel::where('id', $idlast)->delete(); 
         return response()->json(['error'=> true, 'message'=> 'fio occupied']);
        }
+
+       $entries = listModel::all();
+       $bdf = fopen('listuserto.json', 'w');
+       fwrite($bdf, json_encode($entries));
+       fclose($bdf);
 
     return $this->sendResponse(new ProductResource($entry), 'Entry created successfully.');
 } 
@@ -52,3 +58,4 @@ public function destroy($id)
     return $this->sendResponse([], 'Entry deleted successfully.');
 }
 }
+?>
