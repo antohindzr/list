@@ -6,6 +6,8 @@ use App\Models\Models\listModel;
 use App\Http\Resources\ProductResource;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class listuserController extends BaseController
 {
@@ -39,15 +41,61 @@ public function listGenerate(Request $request)
         listModel::where('id', $idlast)->delete(); 
         return response()->json(['error'=> true, 'message'=> 'fio occupied']);
        }
-
+       //to json
        $entries = listModel::all();
-       $bdf = fopen('listuserto.json', 'w');
-       fwrite($bdf, json_encode($entries));
-       fclose($bdf);
+       $tojson = fopen('listuserto.json', 'w');
+       fwrite($tojson, json_encode($entries));
+       fclose($tojson);
+       //to excel
+        $spreadsheet = new Spreadsheet();
+        $toExcel = new Xlsx($spreadsheet);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'FIO');
+        $sheet->setCellValue('C1', 'E-mail');
+        $sheet->setCellValue('D1', 'Ph.number');
+
+        $row = 2;
+        foreach($entries as $content){
+        $sheet->setCellValue('A' . $row, $content['id']);
+        $sheet->setCellValue('B' . $row, $content['fio']);
+        $sheet->setCellValue('C' . $row, $content['email']);
+        $sheet->setCellValue('D' . $row, $content['number']);
+        $row++;
+                                    }
+    $toExcel->save('listuserto.xlsx');
 
     return $this->sendResponse(new ProductResource($entry), 'Entry created successfully.');
 } 
-public function destroy($id)
+public function destroy()
+{
+    listModel::where('id','>', 0)->truncate();
+           //to json
+           $entries = listModel::all();
+           $tojson = fopen('listuserto.json', 'w');
+           fwrite($tojson, json_encode($entries));
+           fclose($tojson);
+           //to excel
+            $spreadsheet = new Spreadsheet();
+            $toExcel = new Xlsx($spreadsheet);
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'ID');
+            $sheet->setCellValue('B1', 'FIO');
+            $sheet->setCellValue('C1', 'E-mail');
+            $sheet->setCellValue('D1', 'Ph.number');
+    
+            $row = 2;
+            foreach($entries as $content){
+            $sheet->setCellValue('A' . $row, $content['id']);
+            $sheet->setCellValue('B' . $row, $content['fio']);
+            $sheet->setCellValue('C' . $row, $content['email']);
+            $sheet->setCellValue('D' . $row, $content['number']);
+            $row++;
+                                        }
+        $toExcel->save('listuserto.xlsx');
+    return $this->sendResponse([], 'Entry deleted successfully.');
+}
+public function delete($id)
 {
     $entry = listModel::find($id);
     
@@ -55,6 +103,29 @@ public function destroy($id)
         return response()->json(['error'=> true, 'message'=> 'not found']);
     }
     $entry -> delete();
+           //to json
+           $entries = listModel::all();
+           $tojson = fopen('listuserto.json', 'w');
+           fwrite($tojson, json_encode($entries));
+           fclose($tojson);
+           //to excel
+            $spreadsheet = new Spreadsheet();
+            $toExcel = new Xlsx($spreadsheet);
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'ID');
+            $sheet->setCellValue('B1', 'FIO');
+            $sheet->setCellValue('C1', 'E-mail');
+            $sheet->setCellValue('D1', 'Ph.number');
+    
+            $row = 2;
+            foreach($entries as $content){
+            $sheet->setCellValue('A' . $row, $content['id']);
+            $sheet->setCellValue('B' . $row, $content['fio']);
+            $sheet->setCellValue('C' . $row, $content['email']);
+            $sheet->setCellValue('D' . $row, $content['number']);
+            $row++;
+                                        }
+        $toExcel->save('listuserto.xlsx');
     return $this->sendResponse([], 'Entry deleted successfully.');
 }
 }

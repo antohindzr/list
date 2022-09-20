@@ -28,7 +28,8 @@ Route::controller(RegisterController::class)->group(function(){
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('listuser', listuserController::class);
     Route::post('listuser', 'App\Http\Controllers\API\listuserController@listGenerate');
-    Route::delete('listuser/{id}', 'App\Http\Controllers\API\listuserController@destroy');
+    Route::delete('listuser', 'App\Http\Controllers\API\listuserController@destroy');
+    Route::delete('delete/{id}', 'App\Http\Controllers\API\listuserController@delete');
 });
 Route::get('listuser', 'App\Http\Controllers\API\listuserController@list');
 
